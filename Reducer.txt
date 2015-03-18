@@ -1,0 +1,28 @@
+import java.io.IOException;
+
+import org.apache.hadoop.io.Text;
+import org.apache.hadoop.mapreduce.Reducer;
+
+public class reducer extends Reducer<Text, Text, Text, Text> {
+
+	@Override
+	public void reduce(Text key, Iterable<Text> values, Context context)
+			throws IOException, InterruptedException {
+		try {
+			double hp = 0;
+			String date = "";
+
+			for (Text value : values) {
+				String line = value.toString();
+				String[] a = line.split(",");
+				if (hp <= Double.parseDouble(a[5])) {
+					hp = Double.parseDouble(a[5]);
+					date = (a[1]);
+				}
+			}
+			context.write(key, new Text(date + "\t" + Double.toString(hp)));
+		} finally {
+
+		}
+	}
+}
